@@ -1,6 +1,7 @@
 package khoina.weatherforecast
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -14,16 +15,28 @@ class ForecastActivity: AppCompatActivity(R.layout.activity_weather_forecast) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setupListView()
-
-        forecastListViewModel.getForecastData().observe(this, Observer {
-            forecastAdapter.submitData(it)
-        })
+        setupViews()
+        setupObservers()
     }
 
-    private fun setupListView() {
+    private fun setupObservers() {
+        forecastListViewModel.getLiveForecastData().observe(this, forecastListObserver)
+    }
+
+    private fun setupViews() {
         rcvWeatherForecast.adapter = forecastAdapter
         val dividerDrawable = resources.getDrawable(R.drawable.list_vertical_divider)
         rcvWeatherForecast.addItemDecoration(VerticalDividerDecoration(dividerDrawable))
+
+        btGetWeather.setOnClickListener(onClickGetWeather)
+    }
+
+    private val onClickGetWeather = View.OnClickListener {
+        val place = etPlace.text.toString().trim()
+        forecastListViewModel.getForecastList(place)
+    }
+
+    private val forecastListObserver = Observer<List<ForecastModel>> {
+        forecastAdapter.submitData(it)
     }
 }

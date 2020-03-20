@@ -19,7 +19,7 @@ class ForecastViewHolder(
 
         val context = itemView.context
         val forecastInfo = "${context.getString(R.string.label_date)}: ${dateFormatter.format(data.date)}\n" +
-                "${context.getString(R.string.label_avg_temp)}: ${data.aveTemp}\n" +
+                "${context.getString(R.string.label_avg_temp)}: ${data.aveTemp.toInt()}\u2103\n" +
                 "${context.getString(R.string.label_pressure)}: ${data.pressure}\n" +
                 "${context.getString(R.string.label_humidity)}: ${data.humidity}%\n" +
                 "${context.getString(R.string.label_description)}: ${data.description}"
