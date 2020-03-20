@@ -2,6 +2,7 @@ package khoina.weatherforecast
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -36,7 +37,23 @@ class ForecastActivity: AppCompatActivity(R.layout.activity_weather_forecast) {
         forecastListViewModel.getForecastList(place)
     }
 
-    private val forecastListObserver = Observer<List<ForecastModel>> {
-        forecastAdapter.submitData(it)
+    private val forecastListObserver = Observer<Resource<List<ForecastModel>>> { resource ->
+        if (resource is Resource.Loading)
+            pbLoading.visibility = View.VISIBLE
+        else
+            pbLoading.visibility = View.INVISIBLE
+
+        if (resource is Resource.Error)
+            showErrorDialog(resource.exception.message)
+
+        resource.data ?. let {
+            forecastAdapter.submitData(it)
+        }
+    }
+
+    private fun showErrorDialog(message: String?) {
+        AlertDialog.Builder(this)
+            .setMessage(message)
+            .show()
     }
 }

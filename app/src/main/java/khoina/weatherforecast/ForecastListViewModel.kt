@@ -1,40 +1,23 @@
 package khoina.weatherforecast
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import androidx.lifecycle.*
 
 
 class ForecastListViewModel: ViewModel() {
 
-    private val entityMapper = ForecastEntityMapper()
-    private val forecastApi: ForecastApi
-    private val liveForecastData = MutableLiveData<List<ForecastModel>>()
-    fun getLiveForecastData() = liveForecastData as LiveData<List<ForecastModel>>
-
-    init {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.openweathermap.org/data/2.5/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        forecastApi = retrofit.create(ForecastApi::class.java)
-    }
+    private val repository = ForecastRepository()
+    private var forecastDataSource: LiveData<Resource<List<ForecastModel>>>? = null
+    private val liveForecastData = MediatorLiveData<Resource<List<ForecastModel>>>()
+    fun getLiveForecastData() = liveForecastData as LiveData<Resource<List<ForecastModel>>>
 
     fun getForecastList(place: String) {
-        viewModelScope.launch {
-            CoroutineScope(Dispatchers.IO).launch {
-                val forecastResponse = forecastApi.getDailyForecast(place, ITEM_COUNT)
-                val modelData = forecastResponse.list.map(entityMapper::map)
-                liveForecastData.postValue(modelData)
+        forecastDataSource ?. let { liveForecastData.removeSource(it) }
+        forecastDataSource = repository.getForecastList(place, ITEM_COUNT)
+            .also { liveDataSource ->
+                liveForecastData.addSource(liveDataSource) { result ->
+                    liveForecastData.value = result
+                }
             }
-        }
     }
 
     companion object {
