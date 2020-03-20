@@ -4,6 +4,6 @@
     <string name="label_date">Date</string>
     <string name="label_avg_temp">Average temperature</string>
     <string name="label_pressure">Pressure</string>
-    <string name="label_humidity" />
+    <string name="label_humidity">Humidity</string>
     <string name="label_description">Description</string>
 </resources>
