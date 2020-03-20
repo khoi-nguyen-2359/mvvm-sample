@@ -1,11 +1,12 @@
 package khoina.weatherforecast
 
+import android.app.Application
 import androidx.lifecycle.*
 
 
-class ForecastListViewModel: ViewModel() {
+class ForecastListViewModel(application: Application): ViewModel() {
 
-    private val repository = ForecastRepository()
+    private val repository = ForecastRepository(application)
     private var forecastDataSource: LiveData<Resource<List<ForecastModel>>>? = null
     private val liveForecastData = MediatorLiveData<Resource<List<ForecastModel>>>()
     fun getLiveForecastData() = liveForecastData as LiveData<Resource<List<ForecastModel>>>

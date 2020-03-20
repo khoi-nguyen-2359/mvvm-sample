@@ -1,17 +1,31 @@
 package khoina.weatherforecast
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.activity_weather_forecast.*
 
 class ForecastActivity: AppCompatActivity(R.layout.activity_weather_forecast) {
 
+    private val viewModelFactory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(ForecastListViewModel::class.java)) {
+                return ForecastListViewModel(application) as T
+            }
+
+            throw IllegalArgumentException("unknown model class $modelClass")
+        }
+
+    }
     private val forecastAdapter = ForecastAdapter()
-    private val forecastListViewModel by lazy { ViewModelProvider(this)[ForecastListViewModel::class.java] }
+    private val forecastListViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[ForecastListViewModel::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,13 +52,17 @@ class ForecastActivity: AppCompatActivity(R.layout.activity_weather_forecast) {
     }
 
     private val forecastListObserver = Observer<Resource<List<ForecastModel>>> { resource ->
+        Log.d("khoi", "resource count = ${resource.data?.size}")
         if (resource is Resource.Loading)
             pbLoading.visibility = View.VISIBLE
         else
             pbLoading.visibility = View.INVISIBLE
 
-        if (resource is Resource.Error)
-            showErrorDialog(resource.exception.message)
+        if (resource is Resource.Error) {
+            tvError.text = resource.exception.message
+        } else {
+            tvError.text = ""
+        }
 
         resource.data ?. let {
             forecastAdapter.submitData(it)
