@@ -20,7 +20,7 @@ class ForecastAdapter: RecyclerView.Adapter<ForecastViewHolder>() {
         holder.bind(items[position])
     }
 
-    fun setData(testData: List<ForecastModel>) {
+    fun submitData(testData: List<ForecastModel>) {
         items.clear()
         items.addAll(testData)
         notifyDataSetChanged()
