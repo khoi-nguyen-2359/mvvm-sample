@@ -13,8 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class ForecastRepository(appContext: Context) {
     private val forecastApi: ForecastApi
-    private val entityModel = ForecastEntityMapper()
-    private val recordMapper = ForecastRecordMapper()
+    private val entityMapper = ForecastEntityMapper()
     private val forecastDao: ForecastDao
 
     init {
@@ -35,35 +34,34 @@ class ForecastRepository(appContext: Context) {
     }
 
     fun getForecastList(place: String, cnt: Int) = liveData<Resource<List<ForecastModel>>>(Dispatchers.IO) {
-        val hasFreshData = forecastDao.hasFreshData(place, cnt, System.currentTimeMillis() - TIME_OUT)
+        val hasFreshData = forecastDao.hasFreshData(place, cnt, System.currentTimeMillis() / 1000 - TIME_OUT_SEC)
 
         if (hasFreshData) {
-            Log.d("ForecastRepository", "cache hit")
+            Log.d("khoina", "cache hit")
 
             emitSource(
                 forecastDao.getForecastList(place).map {
-                    Resource.Success(it.map(recordMapper::map))
+                    Resource.Success(it.map(entityMapper::mapModel))
                 }
             )
         } else {
-            Log.d("ForecastRepository", "cache miss")
+            Log.d("khoina", "cache miss")
 
             try {
                 emitSource(
                     forecastDao.getForecastList(place).map {
-                        Resource.Loading(it.map(recordMapper::map))
+                        Resource.Loading(it.map(entityMapper::mapModel))
                     }
                 )
 
                 val response = forecastApi.getDailyForecast(place, cnt)
-                val models = response.list.map(entityModel::map)
-                val records = models.map { recordMapper.map(place, it) }
+                val records = response.list.map { entityMapper.mapRecord(place, it) }
                 forecastDao.replaceAllForecast(place, records)
-                Log.d("ForecastRepository", "cache records = ${records.size}")
+                Log.d("khoina", "cache records = ${records.size}")
 
                 emitSource(
                     forecastDao.getForecastList(place).map {
-                        Resource.Success(it.map(recordMapper::map))
+                        Resource.Success(it.map(entityMapper::mapModel))
                     }
                 )
             } catch (ex: Exception) {
@@ -75,6 +73,6 @@ class ForecastRepository(appContext: Context) {
     }
 
     companion object {
-        const val TIME_OUT = 10000
+        const val TIME_OUT_SEC = 10
     }
 }

@@ -52,7 +52,8 @@ class ForecastActivity: AppCompatActivity(R.layout.activity_weather_forecast) {
     }
 
     private val forecastListObserver = Observer<Resource<List<ForecastModel>>> { resource ->
-        Log.d("khoi", "resource count = ${resource.data?.size}")
+        Log.d("khoina", "resource count = ${resource.data?.size}")
+
         if (resource is Resource.Loading)
             pbLoading.visibility = View.VISIBLE
         else
@@ -69,9 +70,4 @@ class ForecastActivity: AppCompatActivity(R.layout.activity_weather_forecast) {
         }
     }
 
-    private fun showErrorDialog(message: String?) {
-        AlertDialog.Builder(this)
-            .setMessage(message)
-            .show()
-    }
 }

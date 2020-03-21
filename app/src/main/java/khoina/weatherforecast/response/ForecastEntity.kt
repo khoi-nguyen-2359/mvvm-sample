@@ -1,6 +1,6 @@
 package khoina.weatherforecast.response
 
-data class DayForecastEntity(
+data class ForecastEntity(
     val dt: Long,
     val temp: DayTempEntity,
     val pressure: Int,

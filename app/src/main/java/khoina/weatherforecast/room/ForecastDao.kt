@@ -5,21 +5,30 @@ import androidx.room.*
 
 @Dao
 interface ForecastDao {
-    @Insert
-    fun insertForecastList(forecastData: List<ForecastRecord>)
+    @Query("INSERT OR ABORT INTO forecast (place,date,aveTemp,pressure,humidity,description,createdAtSec) VALUES (:place,:date,:aveTemp,:pressure,:humidity,:description,strftime('%s','now'))")
+    fun insertForecast(place: String, date: Long, aveTemp: Float, pressure: Int, humidity: Int, description: String)
 
     @Query("SELECT * FROM forecast WHERE place = :place")
     fun getForecastList(place: String): LiveData<List<ForecastRecord>>
 
-    @Query("SELECT count(*) FROM forecast WHERE place = :place AND createdAt >= :time")
-    fun countFreshData(place: String, time: Long): Int
+    @Query("SELECT count(*) FROM forecast WHERE place = :place AND createdAtSec >= :timeInSec")
+    fun countFreshData(place: String, timeInSec: Long): Int
 
     fun hasFreshData(place: String, count: Int, time: Long) = countFreshData(place, time) == count
 
     @Transaction
-    fun replaceAllForecast(place: String, forecast: List<ForecastRecord>) {
+    fun replaceAllForecast(place: String, forecastList: List<ForecastRecord>) {
         clearForecast(place)
-        insertForecastList(forecast)
+        forecastList.forEach {
+            insertForecast(
+                it.place,
+                it.date,
+                it.aveTemp,
+                it.pressure,
+                it.humidity,
+                it.description
+            )
+        }
     }
 
     @Query("DELETE FROM forecast WHERE place = :place")
