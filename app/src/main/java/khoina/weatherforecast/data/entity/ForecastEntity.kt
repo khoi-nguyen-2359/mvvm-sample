@@ -1,4 +1,4 @@
-package khoina.weatherforecast.response
+package khoina.weatherforecast.data.entity
 
 data class ForecastEntity(
     val dt: Long,

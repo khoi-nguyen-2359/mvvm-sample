@@ -1,9 +1,11 @@
-package khoina.weatherforecast
+package khoina.weatherforecast.view
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import khoina.weatherforecast.ForecastModel
+import khoina.weatherforecast.R
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_date_forecast.*
 import java.text.DateFormat
@@ -29,7 +31,15 @@ class ForecastViewHolder(
 
     companion object {
         fun createViewHolder(parent: ViewGroup, dateFormatter: DateFormat): ForecastViewHolder {
-            return ForecastViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_date_forecast, parent, false), dateFormatter)
+            return ForecastViewHolder(
+                LayoutInflater.from(
+                    parent.context
+                ).inflate(
+                    R.layout.item_date_forecast,
+                    parent,
+                    false
+                ), dateFormatter
+            )
         }
     }
 }

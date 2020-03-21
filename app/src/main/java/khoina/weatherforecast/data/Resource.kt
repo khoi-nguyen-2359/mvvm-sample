@@ -1,4 +1,4 @@
-package khoina.weatherforecast
+package khoina.weatherforecast.data
 
 sealed class Resource<T>(val data: T?) {
    class Success<T>(data: T) : Resource<T>(data)

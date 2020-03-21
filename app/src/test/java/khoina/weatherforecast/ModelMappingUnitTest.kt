@@ -1,6 +1,7 @@
 package khoina.weatherforecast
 
-import khoina.weatherforecast.room.ForecastRecord
+import khoina.weatherforecast.data.ForecastEntityMapper
+import khoina.weatherforecast.data.room.ForecastRecord
 import org.junit.Assert
 import org.junit.Test
 

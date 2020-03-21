@@ -1,6 +1,6 @@
-package khoina.weatherforecast
+package khoina.weatherforecast.data.retrofit
 
-import khoina.weatherforecast.response.ForecastResponseEntity
+import khoina.weatherforecast.data.entity.ForecastResponseEntity
 import retrofit2.http.GET
 import retrofit2.http.Query
 

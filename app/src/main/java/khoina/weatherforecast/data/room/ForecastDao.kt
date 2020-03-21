@@ -1,4 +1,4 @@
-package khoina.weatherforecast.room
+package khoina.weatherforecast.data.room
 
 import androidx.lifecycle.LiveData
 import androidx.room.*

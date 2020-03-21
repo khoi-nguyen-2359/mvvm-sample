@@ -1,13 +1,15 @@
-package khoina.weatherforecast
+package khoina.weatherforecast.view
 
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import khoina.weatherforecast.*
+import khoina.weatherforecast.ForecastModel
+import khoina.weatherforecast.data.Resource
 import kotlinx.android.synthetic.main.activity_weather_forecast.*
 
 class ForecastActivity: AppCompatActivity(R.layout.activity_weather_forecast) {
@@ -41,7 +43,11 @@ class ForecastActivity: AppCompatActivity(R.layout.activity_weather_forecast) {
     private fun setupViews() {
         rcvWeatherForecast.adapter = forecastAdapter
         val dividerDrawable = resources.getDrawable(R.drawable.list_vertical_divider)
-        rcvWeatherForecast.addItemDecoration(VerticalDividerDecoration(dividerDrawable))
+        rcvWeatherForecast.addItemDecoration(
+            VerticalDividerDecoration(
+                dividerDrawable
+            )
+        )
 
         btGetWeather.setOnClickListener(onClickGetWeather)
     }

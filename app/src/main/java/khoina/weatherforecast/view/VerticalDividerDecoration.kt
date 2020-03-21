@@ -1,4 +1,4 @@
-package khoina.weatherforecast
+package khoina.weatherforecast.view
 
 import android.graphics.Canvas
 import android.graphics.Rect

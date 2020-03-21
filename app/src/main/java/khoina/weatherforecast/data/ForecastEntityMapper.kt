@@ -1,7 +1,8 @@
-package khoina.weatherforecast
+package khoina.weatherforecast.data
 
-import khoina.weatherforecast.response.ForecastEntity
-import khoina.weatherforecast.room.ForecastRecord
+import khoina.weatherforecast.data.entity.ForecastEntity
+import khoina.weatherforecast.data.room.ForecastRecord
+import khoina.weatherforecast.ForecastModel
 import java.util.*
 
 class ForecastEntityMapper {

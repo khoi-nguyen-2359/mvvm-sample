@@ -1,8 +1,9 @@
 package khoina.weatherforecast
 
-import khoina.weatherforecast.response.DayTempEntity
-import khoina.weatherforecast.response.ForecastEntity
-import khoina.weatherforecast.response.WeatherEntity
+import khoina.weatherforecast.data.entity.DayTempEntity
+import khoina.weatherforecast.data.entity.ForecastEntity
+import khoina.weatherforecast.data.ForecastEntityMapper
+import khoina.weatherforecast.data.entity.WeatherEntity
 import org.junit.Assert
 import org.junit.Test
 
@@ -157,7 +158,11 @@ class RecordMappingUnitTest {
             DayTempEntity(0f),
             0,
             0,
-            listOf(WeatherEntity(weatherDescription))
+            listOf(
+                WeatherEntity(
+                    weatherDescription
+                )
+            )
         )
         val record = mapper.mapRecord("", entity)
         Assert.assertEquals(record.description, weatherDescription)

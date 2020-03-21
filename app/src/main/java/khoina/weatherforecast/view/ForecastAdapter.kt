@@ -1,8 +1,8 @@
-package khoina.weatherforecast
+package khoina.weatherforecast.view
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import khoina.weatherforecast.ForecastModel
 import java.text.SimpleDateFormat
 
 class ForecastAdapter: RecyclerView.Adapter<ForecastViewHolder>() {
@@ -11,7 +11,10 @@ class ForecastAdapter: RecyclerView.Adapter<ForecastViewHolder>() {
     private val items = mutableListOf<ForecastModel>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ForecastViewHolder {
-        return ForecastViewHolder.createViewHolder(parent, dateFormatter)
+        return ForecastViewHolder.createViewHolder(
+            parent,
+            dateFormatter
+        )
     }
 
     override fun getItemCount() = items.size

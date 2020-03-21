@@ -1,19 +1,22 @@
-package khoina.weatherforecast
+package khoina.weatherforecast.data
 
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.liveData
 import androidx.lifecycle.map
 import androidx.room.Room
-import khoina.weatherforecast.room.ForecastDao
-import khoina.weatherforecast.room.ForecastDatabase
+import khoina.weatherforecast.ForecastModel
+import khoina.weatherforecast.data.retrofit.ForecastApi
+import khoina.weatherforecast.data.room.ForecastDao
+import khoina.weatherforecast.data.room.ForecastDatabase
 import kotlinx.coroutines.Dispatchers
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class ForecastRepository(appContext: Context) {
     private val forecastApi: ForecastApi
-    private val entityMapper = ForecastEntityMapper()
+    private val entityMapper =
+        ForecastEntityMapper()
     private val forecastDao: ForecastDao
 
     init {
@@ -50,7 +53,11 @@ class ForecastRepository(appContext: Context) {
             try {
                 emitSource(
                     forecastDao.getForecastList(place).map {
-                        Resource.Loading(it.map(entityMapper::mapModel))
+                        Resource.Loading(
+                            it.map(
+                                entityMapper::mapModel
+                            )
+                        )
                     }
                 )
 
@@ -61,18 +68,24 @@ class ForecastRepository(appContext: Context) {
 
                 emitSource(
                     forecastDao.getForecastList(place).map {
-                        Resource.Success(it.map(entityMapper::mapModel))
+                        Resource.Success(
+                            it.map(
+                                entityMapper::mapModel
+                            )
+                        )
                     }
                 )
             } catch (ex: Exception) {
                 emitSource(forecastDao.getForecastList(place).map {
-                    Resource.Error<List<ForecastModel>>(ex)
+                    Resource.Error<List<ForecastModel>>(
+                        ex
+                    )
                 })
             }
         }
     }
 
     companion object {
-        const val TIME_OUT_SEC = 10
+        const val TIME_OUT_SEC = 5
     }
 }
