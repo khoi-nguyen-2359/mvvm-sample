@@ -13,7 +13,7 @@ class RecordMappingUnitTest {
         val place = "Saigon"
         val entity = ForecastEntity(
             1588219524L,
-            DayTempEntity(0f,0f),
+            DayTempEntity(0f),
             0,
             0,
             listOf()
@@ -28,7 +28,7 @@ class RecordMappingUnitTest {
         val place = ""
         val entity = ForecastEntity(
             1588219524L,
-            DayTempEntity(0f,0f),
+            DayTempEntity(0f),
             0,
             0,
             listOf()
@@ -43,7 +43,7 @@ class RecordMappingUnitTest {
         val place = "!@)(NN  "
         val entity = ForecastEntity(
             1588219524L,
-            DayTempEntity(0f,0f),
+            DayTempEntity(0f),
             0,
             0,
             listOf()
@@ -58,7 +58,7 @@ class RecordMappingUnitTest {
         val dateInSec = 1588219524L
         val entity = ForecastEntity(
             dateInSec,
-            DayTempEntity(0f,0f),
+            DayTempEntity(0f),
             0,
             0,
             listOf()
@@ -71,49 +71,49 @@ class RecordMappingUnitTest {
     @Test
     fun recordMapping_isCorrectAveTempCalculation() {
         val mapper = ForecastEntityMapper()
-        val minTemp = 27f
-        val maxTemp = 32f
+        val dayTemp = 27f
         val entity = ForecastEntity(
             1588219524L,
-            DayTempEntity(minTemp, maxTemp),
+            DayTempEntity(dayTemp),
             0,
             0,
             listOf()
         )
         val record = mapper.mapRecord("", entity)
-        Assert.assertEquals(record.aveTemp, (minTemp + maxTemp) / 2)
+        Assert.assertEquals(entity.temp.day, dayTemp)
+        Assert.assertEquals(record.aveTemp, dayTemp)
     }
 
     @Test
     fun recordMapping_isCorrectNegativeAveTempCalculation() {
         val mapper = ForecastEntityMapper()
-        val minTemp = -2f
-        val maxTemp = -15f
+        val dayTemp = -15f
         val entity = ForecastEntity(
             1588219524L,
-            DayTempEntity(minTemp, maxTemp),
+            DayTempEntity(dayTemp),
             0,
             0,
             listOf()
         )
         val record = mapper.mapRecord("", entity)
-        Assert.assertEquals(record.aveTemp, (minTemp + maxTemp) / 2)
+        Assert.assertEquals(entity.temp.day, dayTemp)
+        Assert.assertEquals(record.aveTemp, dayTemp)
     }
 
     @Test
     fun recordMapping_isCorrectArbitraryAveTempCalculation() {
         val mapper = ForecastEntityMapper()
-        val minTemp = -20012f
-        val maxTemp = 15999f
+        val dayTemp = -20012f
         val entity = ForecastEntity(
             1588219524L,
-            DayTempEntity(minTemp, maxTemp),
+            DayTempEntity(dayTemp),
             0,
             0,
             listOf()
         )
         val record = mapper.mapRecord("", entity)
-        Assert.assertEquals(record.aveTemp, (minTemp + maxTemp) / 2)
+        Assert.assertEquals(entity.temp.day, dayTemp)
+        Assert.assertEquals(record.aveTemp, dayTemp)
     }
 
     @Test
@@ -122,7 +122,7 @@ class RecordMappingUnitTest {
         val pressure = 1001
         val entity = ForecastEntity(
             1588219524L,
-            DayTempEntity(0f, 0f),
+            DayTempEntity(0f),
             pressure,
             0,
             listOf()
@@ -138,7 +138,7 @@ class RecordMappingUnitTest {
         val humidity = 60
         val entity = ForecastEntity(
             1588219524L,
-            DayTempEntity(0f, 0f),
+            DayTempEntity(0f),
             0,
             humidity,
             listOf()
@@ -154,7 +154,7 @@ class RecordMappingUnitTest {
         val weatherDescription = "light rain"
         val entity = ForecastEntity(
             1588219524L,
-            DayTempEntity(0f, 0f),
+            DayTempEntity(0f),
             0,
             0,
             listOf(WeatherEntity(weatherDescription))
@@ -168,7 +168,7 @@ class RecordMappingUnitTest {
         val mapper = ForecastEntityMapper()
         val entity = ForecastEntity(
             1588219524L,
-            DayTempEntity(0f, 0f),
+            DayTempEntity(0f),
             0,
             0,
             listOf()

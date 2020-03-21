@@ -9,7 +9,7 @@ class ForecastEntityMapper {
         return ForecastRecord(
             place,
             entity.dt,
-            (entity.temp.min + entity.temp.max) / 2,
+            entity.temp.day,
             entity.pressure,
             entity.humidity,
             entity.weather.firstOrNull()?.description ?: ""
