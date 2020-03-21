@@ -3,6 +3,7 @@ package khoina.weatherforecast.view
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
@@ -14,20 +15,8 @@ import kotlinx.android.synthetic.main.activity_weather_forecast.*
 
 class ForecastActivity: AppCompatActivity(R.layout.activity_weather_forecast) {
 
-    private val viewModelFactory = object : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(ForecastListViewModel::class.java)) {
-                return ForecastListViewModel(application) as T
-            }
-
-            throw IllegalArgumentException("unknown model class $modelClass")
-        }
-
-    }
     private val forecastAdapter = ForecastAdapter()
-    private val forecastListViewModel by lazy {
-        ViewModelProvider(this, viewModelFactory)[ForecastListViewModel::class.java]
-    }
+    private val forecastListViewModel by lazy { ForecastListViewModel(application) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,16 +32,23 @@ class ForecastActivity: AppCompatActivity(R.layout.activity_weather_forecast) {
     private fun setupViews() {
         rcvWeatherForecast.adapter = forecastAdapter
         val dividerDrawable = resources.getDrawable(R.drawable.list_vertical_divider)
-        rcvWeatherForecast.addItemDecoration(
-            VerticalDividerDecoration(
-                dividerDrawable
-            )
-        )
+        rcvWeatherForecast.addItemDecoration(VerticalDividerDecoration(dividerDrawable))
 
-        btGetWeather.setOnClickListener(onClickGetWeather)
+        btGetWeather.setOnClickListener {
+            onGetWeatherForecast()
+        }
+        etPlace.setOnEditorActionListener { v, actionId, event ->
+            return@setOnEditorActionListener when (actionId) {
+                EditorInfo.IME_ACTION_SEARCH -> {
+                    onGetWeatherForecast()
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
-    private val onClickGetWeather = View.OnClickListener {
+    private fun onGetWeatherForecast() {
         val place = etPlace.text.toString().trim()
         forecastListViewModel.getForecastList(place)
     }
