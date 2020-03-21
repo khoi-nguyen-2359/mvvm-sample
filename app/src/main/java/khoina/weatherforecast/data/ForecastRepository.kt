@@ -12,29 +12,15 @@ import khoina.weatherforecast.data.room.ForecastDatabase
 import kotlinx.coroutines.Dispatchers
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ForecastRepository(appContext: Context) {
-    private val forecastApi: ForecastApi
-    private val entityMapper =
-        ForecastEntityMapper()
+@Singleton
+class ForecastRepository @Inject constructor(
+    private val forecastApi: ForecastApi,
     private val forecastDao: ForecastDao
-
-    init {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.openweathermap.org/data/2.5/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        forecastApi = retrofit.create(ForecastApi::class.java)
-
-        val database = Room.databaseBuilder(
-                appContext,
-                ForecastDatabase::class.java,
-                "forecast_database"
-            )
-            .fallbackToDestructiveMigration()
-            .build()
-        forecastDao = database.forecastDao()
-    }
+) {
+    private val entityMapper = ForecastEntityMapper()
 
     fun getForecastList(place: String, cnt: Int) = liveData<Resource<List<ForecastModel>>>(Dispatchers.IO) {
         val hasFreshData = forecastDao.hasFreshData(place, cnt, System.currentTimeMillis() / 1000 - TIME_OUT_SEC)

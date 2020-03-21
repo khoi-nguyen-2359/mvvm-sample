@@ -8,18 +8,29 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.media2359.genflix.MainApp
+import com.media2359.shared.dagger.ViewModelFactory
 import khoina.weatherforecast.*
 import khoina.weatherforecast.ForecastModel
 import khoina.weatherforecast.data.Resource
 import kotlinx.android.synthetic.main.activity_weather_forecast.*
+import javax.inject.Inject
 
 class ForecastActivity: AppCompatActivity(R.layout.activity_weather_forecast) {
 
     private val forecastAdapter = ForecastAdapter()
-    private val forecastListViewModel by lazy { ForecastListViewModel(application) }
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val forecastListViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[ForecastListViewModel::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        (application as MainApp).appComponent.inject(this)
 
         setupViews()
         setupObservers()

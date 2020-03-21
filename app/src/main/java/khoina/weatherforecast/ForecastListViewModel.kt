@@ -4,11 +4,13 @@ import android.app.Application
 import androidx.lifecycle.*
 import khoina.weatherforecast.data.ForecastRepository
 import khoina.weatherforecast.data.Resource
+import javax.inject.Inject
 
 
-class ForecastListViewModel(application: Application): ViewModel() {
+class ForecastListViewModel @Inject constructor(
+    private val repository: ForecastRepository
+): ViewModel() {
 
-    private val repository = ForecastRepository(application)
     private var forecastDataSource: LiveData<Resource<List<ForecastModel>>>? = null
     private val liveForecastData = MediatorLiveData<Resource<List<ForecastModel>>>()
     fun getLiveForecastData() = liveForecastData as LiveData<Resource<List<ForecastModel>>>
