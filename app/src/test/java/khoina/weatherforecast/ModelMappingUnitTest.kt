@@ -3,176 +3,102 @@ package khoina.weatherforecast
 import khoina.weatherforecast.data.ForecastEntityMapper
 import khoina.weatherforecast.data.room.ForecastRecord
 import org.junit.Assert
+import org.junit.Assert.*
 import org.junit.Test
 
 class ModelMappingUnitTest {
     @Test
-    fun modelMapping_isCorrectDateConversion() {
+    fun modelMapping_isCorrectMapping() {
         val mapper = ForecastEntityMapper()
-        val dateInSec = 1588219524L
         val record = ForecastRecord(
-            "",
-            dateInSec,
-            0f,
+            "saigon",
+            1588219524L,
+            30f,
+            1020,
+            30,
+            "scattered clouds"
+        )
+        val model = mapper.mapModel(record)
+        assertEquals(model.date.time, 1588219524000)
+        assertEquals(model.aveTemp, 30f)
+        assertEquals(model.pressure, 1020)
+        assertEquals(model.humidity, 30)
+        assertEquals(model.description, "scattered clouds")
+    }
+
+    @Test
+    fun modelMapping_isCorrectArbitraryPlaceMapping() {
+        val mapper = ForecastEntityMapper()
+        val record = ForecastRecord(
+            "!)* m",
+            1588219524L,
+            -10f,
+            1011,
             0,
+            "scattered clouds"
+        )
+        val model = mapper.mapModel(record)
+        assertEquals(model.date.time, 1588219524000)
+        assertEquals(model.aveTemp, -10f)
+        assertEquals(model.pressure, 1011)
+        assertEquals(model.humidity, 0)
+        assertEquals(model.description, "scattered clouds")
+    }
+
+    @Test
+    fun modelMapping_isCorrectArbitraryDateMapping() {
+        val mapper = ForecastEntityMapper()
+        val record = ForecastRecord(
+            "!)* m",
+            0,
+            -10f,
+            1011,
+            0,
+            "sky is clear"
+        )
+        val model = mapper.mapModel(record)
+        assertEquals(model.date.time, 0)
+        assertEquals(model.aveTemp, -10f)
+        assertEquals(model.pressure, 1011)
+        assertEquals(model.humidity, 0)
+        assertEquals(model.description, "sky is clear")
+    }
+
+    @Test
+    fun modelMapping_isCorrectEmptyDescriptionMapping() {
+        val mapper = ForecastEntityMapper()
+        val record = ForecastRecord(
+            "!)* m",
+            0,
+            -10f,
+            1011,
             0,
             ""
         )
         val model = mapper.mapModel(record)
-        Assert.assertEquals(record.date, dateInSec)
-        Assert.assertEquals(model.date.time, dateInSec * 1000)
+        assertEquals(model.date.time, 0)
+        assertEquals(model.aveTemp, -10f)
+        assertEquals(model.pressure, 1011)
+        assertEquals(model.humidity, 0)
+        assertEquals(model.description, "")
     }
 
     @Test
-    fun modelMapping_isCorrectAveTempCalculation() {
+    fun modelMapping_isCorrectArbitraryDataMapping() {
         val mapper = ForecastEntityMapper()
-        val aveTemp = 32f
         val record = ForecastRecord(
-            "",
+            ")!(N ",
             0,
-            aveTemp,
-            0,
-            0,
+            -300f,
+            -12,
+            -999,
             ""
         )
         val model = mapper.mapModel(record)
-        Assert.assertEquals(record.aveTemp, aveTemp)
-        Assert.assertEquals(model.aveTemp, aveTemp)
-    }
-
-    @Test
-    fun modelMapping_isCorrectNegativeAveTempCalculation() {
-        val mapper = ForecastEntityMapper()
-        val aveTemp = -18f
-        val record = ForecastRecord(
-            "",
-            0,
-            aveTemp,
-            0,
-            0,
-            ""
-        )
-        val model = mapper.mapModel(record)
-        Assert.assertEquals(record.aveTemp, aveTemp)
-        Assert.assertEquals(model.aveTemp, aveTemp)
-    }
-
-    @Test
-    fun modelMapping_isCorrectPressure() {
-        val mapper = ForecastEntityMapper()
-        val pressure = 1900
-        val record = ForecastRecord(
-            "",
-            0,
-            0f,
-            pressure,
-            0,
-            ""
-        )
-        val model = mapper.mapModel(record)
-        Assert.assertEquals(record.pressure, pressure)
-        Assert.assertEquals(model.pressure, pressure)
-    }
-
-    @Test
-    fun modelMapping_isCorrectArbitraryPressure() {
-        val mapper = ForecastEntityMapper()
-        val pressure = -1900733
-        val record = ForecastRecord(
-            "",
-            0,
-            0f,
-            pressure,
-            0,
-            ""
-        )
-        val model = mapper.mapModel(record)
-        Assert.assertEquals(record.pressure, pressure)
-        Assert.assertEquals(model.pressure, pressure)
-    }
-
-    @Test
-    fun modelMapping_isCorrectArbitraryHumidity() {
-        val mapper = ForecastEntityMapper()
-        val humidity = -1060
-        val record = ForecastRecord(
-            "",
-            0,
-            0f,
-            0,
-            humidity,
-            ""
-        )
-        val model = mapper.mapModel(record)
-        Assert.assertEquals(record.humidity, humidity)
-        Assert.assertEquals(model.humidity, humidity)
-    }
-
-    @Test
-    fun modelMapping_isCorrectHumidity() {
-        val mapper = ForecastEntityMapper()
-        val humidity = 60
-        val record = ForecastRecord(
-            "",
-            0,
-            0f,
-            0,
-            humidity,
-            ""
-        )
-        val model = mapper.mapModel(record)
-        Assert.assertEquals(record.humidity, humidity)
-        Assert.assertEquals(model.humidity, humidity)
-    }
-
-    @Test
-    fun modelMapping_isCorrectWeatherDescription() {
-        val mapper = ForecastEntityMapper()
-        val weatherDescription = "light rain"
-        val record = ForecastRecord(
-            "",
-            0,
-            0f,
-            0,
-            0,
-            weatherDescription
-        )
-        val model = mapper.mapModel(record)
-        Assert.assertEquals(record.description, weatherDescription)
-        Assert.assertEquals(model.description, weatherDescription)
-    }
-
-    @Test
-    fun modelMapping_isCorrectEmptyWeatherDescription() {
-        val mapper = ForecastEntityMapper()
-        val weatherDescription = ""
-        val record = ForecastRecord(
-            "",
-            0,
-            0f,
-            0,
-            0,
-            weatherDescription
-        )
-        val model = mapper.mapModel(record)
-        Assert.assertEquals(record.description, weatherDescription)
-        Assert.assertEquals(model.description, weatherDescription)
-    }
-
-    @Test
-    fun modelMapping_isCorrectArbitraryWeatherDescription() {
-        val mapper = ForecastEntityMapper()
-        val weatherDescription = "!)(U mm  "
-        val record = ForecastRecord(
-            "",
-            0,
-            0f,
-            0,
-            0,
-            weatherDescription
-        )
-        val model = mapper.mapModel(record)
-        Assert.assertEquals(record.description, weatherDescription)
-        Assert.assertEquals(model.description, weatherDescription)
+        assertEquals(model.date.time, 0)
+        assertEquals(model.aveTemp, -300f)
+        assertEquals(model.pressure, -12)
+        assertEquals(model.humidity, -999)
+        assertEquals(model.description, "")
     }
 }

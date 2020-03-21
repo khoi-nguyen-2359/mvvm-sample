@@ -11,8 +11,8 @@ interface ForecastDao {
     @Query("SELECT * FROM forecast WHERE place = :place")
     fun getForecastList(place: String): LiveData<List<ForecastRecord>>
 
-    @Query("SELECT count(*) FROM forecast WHERE place = :place AND createdAtSec >= :timeInSec")
-    fun countFreshData(place: String, timeInSec: Long): Int
+    @Query("SELECT count(*) FROM forecast WHERE place = :place AND createdAtSec >= :staleTime")
+    fun countFreshData(place: String, staleTime: Long): Int
 
     fun hasFreshData(place: String, count: Int, time: Long) = countFreshData(place, time) == count
 

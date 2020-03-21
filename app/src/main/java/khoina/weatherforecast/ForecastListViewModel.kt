@@ -1,7 +1,8 @@
 package khoina.weatherforecast
 
-import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.ViewModel
 import khoina.weatherforecast.data.ForecastRepository
 import khoina.weatherforecast.data.Resource
 import javax.inject.Inject

@@ -9,176 +9,117 @@ import org.junit.Test
 
 class RecordMappingUnitTest {
     @Test
-    fun recordMapping_isCorrectPlace() {
+    fun recordMapping_isCorrectMapping() {
         val mapper = ForecastEntityMapper()
-        val place = "Saigon"
         val entity = ForecastEntity(
             1588219524L,
-            DayTempEntity(0f),
-            0,
-            0,
-            listOf()
+            DayTempEntity(10f),
+            1000,
+            30,
+            listOf(WeatherEntity("Light rain"))
         )
-        val record = mapper.mapRecord(place, entity)
-        Assert.assertEquals(place, record.place)
+        val record = mapper.mapRecord("Saigon", entity)
+        Assert.assertEquals(record.place, "Saigon")
+        Assert.assertEquals(record.date, 1588219524L)
+        Assert.assertEquals(record.aveTemp, 10f)
+        Assert.assertEquals(record.pressure, 1000)
+        Assert.assertEquals(record.humidity, 30)
+        Assert.assertEquals(record.description, "Light rain")
     }
 
     @Test
-    fun recordMapping_isCorrectEmptyPlace() {
+    fun recordMapping_isCorrectEmptyPlaceMapping() {
         val mapper = ForecastEntityMapper()
-        val place = ""
         val entity = ForecastEntity(
             1588219524L,
-            DayTempEntity(0f),
-            0,
-            0,
-            listOf()
+            DayTempEntity(10f),
+            1000,
+            30,
+            listOf(WeatherEntity("Light rain"))
         )
-        val record = mapper.mapRecord(place, entity)
-        Assert.assertEquals(place, record.place)
+        val record = mapper.mapRecord("", entity)
+        Assert.assertEquals(record.place, "")
+        Assert.assertEquals(record.date, 1588219524L)
+        Assert.assertEquals(record.aveTemp, 10f)
+        Assert.assertEquals(record.pressure, 1000)
+        Assert.assertEquals(record.humidity, 30)
+        Assert.assertEquals(record.description, "Light rain")
     }
 
     @Test
-    fun recordMapping_isCorrectArbitraryPlace() {
+    fun recordMapping_isCorrectArbitraryDateMapping() {
         val mapper = ForecastEntityMapper()
-        val place = "!@)(NN  "
         val entity = ForecastEntity(
-            1588219524L,
-            DayTempEntity(0f),
             0,
-            0,
-            listOf()
+            DayTempEntity(10f),
+            1000,
+            30,
+            listOf(WeatherEntity("Light rain"))
         )
-        val record = mapper.mapRecord(place, entity)
-        Assert.assertEquals(place, record.place)
+        val record = mapper.mapRecord("new york", entity)
+        Assert.assertEquals(record.place, "new york")
+        Assert.assertEquals(record.date, 0)
+        Assert.assertEquals(record.aveTemp, 10f)
+        Assert.assertEquals(record.pressure, 1000)
+        Assert.assertEquals(record.humidity, 30)
+        Assert.assertEquals(record.description, "Light rain")
     }
 
     @Test
-    fun recordMapping_isCorrectDateConversion() {
+    fun recordMapping_isCorrectEmptyDescriptionMapping() {
         val mapper = ForecastEntityMapper()
-        val dateInSec = 1588219524L
         val entity = ForecastEntity(
-            dateInSec,
-            DayTempEntity(0f),
             0,
+            DayTempEntity(10f),
+            1000,
+            30,
+            listOf()
+        )
+        val record = mapper.mapRecord("new york", entity)
+        Assert.assertEquals(record.place, "new york")
+        Assert.assertEquals(record.date, 0)
+        Assert.assertEquals(record.aveTemp, 10f)
+        Assert.assertEquals(record.pressure, 1000)
+        Assert.assertEquals(record.humidity, 30)
+        Assert.assertEquals(record.description, "")
+    }
+
+    @Test
+    fun recordMapping_isCorrectSingleDescriptionMapping() {
+        val mapper = ForecastEntityMapper()
+        val entity = ForecastEntity(
             0,
+            DayTempEntity(10f),
+            1000,
+            30,
+            listOf(WeatherEntity("light rain"), WeatherEntity("sky is clear"))
+        )
+        val record = mapper.mapRecord("new york", entity)
+        Assert.assertEquals(record.place, "new york")
+        Assert.assertEquals(record.date, 0)
+        Assert.assertEquals(record.aveTemp, 10f)
+        Assert.assertEquals(record.pressure, 1000)
+        Assert.assertEquals(record.humidity, 30)
+        Assert.assertEquals(record.description, "light rain")
+    }
+
+
+    @Test
+    fun recordMapping_isCorrectArbitraryDataMapping() {
+        val mapper = ForecastEntityMapper()
+        val entity = ForecastEntity(
+            0,
+            DayTempEntity(-100f),
+            -10,
+            200,
             listOf()
         )
         val record = mapper.mapRecord("", entity)
-        Assert.assertEquals(entity.dt, dateInSec)
-        Assert.assertEquals(record.date, dateInSec)
-    }
-
-    @Test
-    fun recordMapping_isCorrectAveTempCalculation() {
-        val mapper = ForecastEntityMapper()
-        val dayTemp = 27f
-        val entity = ForecastEntity(
-            1588219524L,
-            DayTempEntity(dayTemp),
-            0,
-            0,
-            listOf()
-        )
-        val record = mapper.mapRecord("", entity)
-        Assert.assertEquals(entity.temp.day, dayTemp)
-        Assert.assertEquals(record.aveTemp, dayTemp)
-    }
-
-    @Test
-    fun recordMapping_isCorrectNegativeAveTempCalculation() {
-        val mapper = ForecastEntityMapper()
-        val dayTemp = -15f
-        val entity = ForecastEntity(
-            1588219524L,
-            DayTempEntity(dayTemp),
-            0,
-            0,
-            listOf()
-        )
-        val record = mapper.mapRecord("", entity)
-        Assert.assertEquals(entity.temp.day, dayTemp)
-        Assert.assertEquals(record.aveTemp, dayTemp)
-    }
-
-    @Test
-    fun recordMapping_isCorrectArbitraryAveTempCalculation() {
-        val mapper = ForecastEntityMapper()
-        val dayTemp = -20012f
-        val entity = ForecastEntity(
-            1588219524L,
-            DayTempEntity(dayTemp),
-            0,
-            0,
-            listOf()
-        )
-        val record = mapper.mapRecord("", entity)
-        Assert.assertEquals(entity.temp.day, dayTemp)
-        Assert.assertEquals(record.aveTemp, dayTemp)
-    }
-
-    @Test
-    fun recordMapping_isCorrectPressure() {
-        val mapper = ForecastEntityMapper()
-        val pressure = 1001
-        val entity = ForecastEntity(
-            1588219524L,
-            DayTempEntity(0f),
-            pressure,
-            0,
-            listOf()
-        )
-        val record = mapper.mapRecord("", entity)
-        Assert.assertEquals(entity.pressure, pressure)
-        Assert.assertEquals(record.pressure, pressure)
-    }
-
-    @Test
-    fun recordMapping_isCorrectHumidity() {
-        val mapper = ForecastEntityMapper()
-        val humidity = 60
-        val entity = ForecastEntity(
-            1588219524L,
-            DayTempEntity(0f),
-            0,
-            humidity,
-            listOf()
-        )
-        val record = mapper.mapRecord("", entity)
-        Assert.assertEquals(entity.humidity, humidity)
-        Assert.assertEquals(record.humidity, humidity)
-    }
-
-    @Test
-    fun recordMapping_isCorrectWeatherDescription() {
-        val mapper = ForecastEntityMapper()
-        val weatherDescription = "light rain"
-        val entity = ForecastEntity(
-            1588219524L,
-            DayTempEntity(0f),
-            0,
-            0,
-            listOf(
-                WeatherEntity(
-                    weatherDescription
-                )
-            )
-        )
-        val record = mapper.mapRecord("", entity)
-        Assert.assertEquals(record.description, weatherDescription)
-    }
-
-    @Test
-    fun recordMapping_isCorrectEmptyWeatherDescription() {
-        val mapper = ForecastEntityMapper()
-        val entity = ForecastEntity(
-            1588219524L,
-            DayTempEntity(0f),
-            0,
-            0,
-            listOf()
-        )
-        val record = mapper.mapRecord("", entity)
+        Assert.assertEquals(record.place, "")
+        Assert.assertEquals(record.date, 0)
+        Assert.assertEquals(record.aveTemp, -100f)
+        Assert.assertEquals(record.pressure, -10)
+        Assert.assertEquals(record.humidity, 200)
         Assert.assertEquals(record.description, "")
     }
 }
