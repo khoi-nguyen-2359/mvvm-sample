@@ -1,4 +1,4 @@
-package com.media2359.shared.dagger
+package khoina.weatherforecast.dagger
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

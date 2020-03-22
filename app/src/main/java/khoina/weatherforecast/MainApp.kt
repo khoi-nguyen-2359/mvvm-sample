@@ -1,11 +1,20 @@
-package com.media2359.genflix
+package khoina.weatherforecast
 
 import android.app.Application
-import com.media2359.genflix.dagger.DaggerAppComponent
+import androidx.annotation.VisibleForTesting
+import khoina.weatherforecast.dagger.AppComponent
+import khoina.weatherforecast.dagger.DaggerAppComponent
 
 
 class MainApp : Application() {
-	val appComponent = DaggerAppComponent.builder()
+	private var appComponent = DaggerAppComponent.builder()
 		.mainApp(this)
 		.build()
+
+	fun getAppComponent() = appComponent
+
+	@VisibleForTesting
+	fun setAppComponent(value: AppComponent) {
+		appComponent = value
+	}
 }

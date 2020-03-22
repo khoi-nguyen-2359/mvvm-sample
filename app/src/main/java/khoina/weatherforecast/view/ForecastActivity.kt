@@ -6,10 +6,8 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.media2359.genflix.MainApp
-import com.media2359.shared.dagger.ViewModelFactory
+import khoina.weatherforecast.MainApp
 import khoina.weatherforecast.*
 import khoina.weatherforecast.ForecastModel
 import khoina.weatherforecast.data.Resource
@@ -30,7 +28,7 @@ class ForecastActivity: AppCompatActivity(R.layout.activity_weather_forecast) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        (application as MainApp).appComponent.inject(this)
+        (application as MainApp).getAppComponent().inject(this)
 
         setupViews()
         setupObservers()

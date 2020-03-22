@@ -1,18 +1,18 @@
-package com.media2359.genflix.dagger
+package khoina.weatherforecast.dagger
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
-import com.media2359.genflix.MainApp
-import com.media2359.shared.dagger.ViewModelFactory
+import com.google.gson.FieldNamingPolicy
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import khoina.weatherforecast.MainApp
 import dagger.Binds
-import dagger.MapKey
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
 import khoina.weatherforecast.ForecastListViewModel
-import khoina.weatherforecast.dagger.ViewModelKey
 import khoina.weatherforecast.data.retrofit.ForecastApi
 import khoina.weatherforecast.data.room.ForecastDao
 import khoina.weatherforecast.data.room.ForecastDatabase
@@ -21,7 +21,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
-import kotlin.reflect.KClass
 
 @Module(includes = [AppModule.Bindings::class])
 class AppModule {
@@ -52,8 +51,13 @@ class AppModule {
     }
 
     @Provides
+    fun gson(): Gson = GsonBuilder()
+        .setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+        .create()
+
+    @Provides
     @Singleton
-    fun providesAppRetrofit(): Retrofit {
+    fun providesAppRetrofit(gson: Gson): Retrofit {
         val okHttpClientBuilder = OkHttpClient.Builder()
         val logger = HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
             override fun log(message: String) {
@@ -64,7 +68,7 @@ class AppModule {
         okHttpClientBuilder.addInterceptor(logger)
 
         return Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .client(okHttpClientBuilder.build())
             .baseUrl(API_ENDPOINT)
             .build()

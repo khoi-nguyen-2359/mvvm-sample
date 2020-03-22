@@ -4,11 +4,10 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import junit.framework.Assert.assertEquals
 import khoina.weatherforecast.data.room.ForecastDao
 import khoina.weatherforecast.data.room.ForecastDatabase
-import khoina.weatherforecast.data.room.ForecastRecord
 import org.junit.*
+import org.junit.Assert.assertEquals
 import org.junit.runner.RunWith
 import java.util.concurrent.TimeUnit
 

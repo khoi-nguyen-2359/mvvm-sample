@@ -1,6 +1,6 @@
-package com.media2359.genflix.dagger
+package khoina.weatherforecast.dagger
 
-import com.media2359.genflix.MainApp
+import khoina.weatherforecast.MainApp
 import dagger.BindsInstance
 import dagger.Component
 import khoina.weatherforecast.view.ForecastActivity

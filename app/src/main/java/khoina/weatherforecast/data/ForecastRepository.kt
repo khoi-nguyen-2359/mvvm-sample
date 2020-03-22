@@ -1,24 +1,22 @@
 package khoina.weatherforecast.data
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.liveData
 import androidx.lifecycle.map
-import androidx.room.Room
+import com.google.gson.Gson
 import khoina.weatherforecast.ForecastModel
 import khoina.weatherforecast.data.retrofit.ForecastApi
 import khoina.weatherforecast.data.room.ForecastDao
-import khoina.weatherforecast.data.room.ForecastDatabase
 import kotlinx.coroutines.Dispatchers
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.HttpException
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ForecastRepository @Inject constructor(
     private val forecastApi: ForecastApi,
-    private val forecastDao: ForecastDao
+    private val forecastDao: ForecastDao,
+    private val gson: Gson
 ) {
     private val entityMapper = ForecastEntityMapper()
 
@@ -39,11 +37,9 @@ class ForecastRepository @Inject constructor(
             try {
                 emitSource(
                     forecastDao.getForecastList(place).map {
-                        Resource.Loading(
-                            it.map(
-                                entityMapper::mapModel
-                            )
-                        )
+                        Resource.Loading(it.map(
+                            entityMapper::mapModel
+                        ))
                     }
                 )
 
@@ -54,18 +50,14 @@ class ForecastRepository @Inject constructor(
 
                 emitSource(
                     forecastDao.getForecastList(place).map {
-                        Resource.Success(
-                            it.map(
-                                entityMapper::mapModel
-                            )
-                        )
+                        Resource.Success(it.map(
+                            entityMapper::mapModel
+                        ))
                     }
                 )
             } catch (ex: Exception) {
                 emitSource(forecastDao.getForecastList(place).map {
-                    Resource.Error<List<ForecastModel>>(
-                        ex
-                    )
+                    Resource.Error<List<ForecastModel>>((ex as? HttpException)?.parseHttpException(gson) ?: ex)
                 })
             }
         }

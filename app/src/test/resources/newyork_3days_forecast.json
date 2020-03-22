@@ -1,0 +1,115 @@
+{
+	"city": {
+		"id": 5128581,
+		"name": "New York",
+		"coord": {
+			"lon": -74.006,
+			"lat": 40.7143
+		},
+		"country": "US",
+		"population": 8175133,
+		"timezone": -14400
+	},
+	"cod": "200",
+	"message": 0.4968367,
+	"cnt": 3,
+	"list": [
+		{
+			"dt": 1584896400,
+			"sunrise": 1584874514,
+			"sunset": 1584918609,
+			"temp": {
+				"day": 4.95,
+				"min": 0.91,
+				"max": 5.3,
+				"night": 3.81,
+				"eve": 4.21,
+				"morn": 0.91
+			},
+			"feels_like": {
+				"day": -0.76,
+				"night": -2.87,
+				"eve": -2.32,
+				"morn": -6.26
+			},
+			"pressure": 1038,
+			"humidity": 63,
+			"weather": [
+				{
+					"id": 804,
+					"main": "Clouds",
+					"description": "overcast clouds",
+					"icon": "04d"
+				}
+			],
+			"speed": 5.02,
+			"deg": 107,
+			"clouds": 89
+		},
+		{
+			"dt": 1584982800,
+			"sunrise": 1584960813,
+			"sunset": 1585005071,
+			"temp": {
+				"day": 6.13,
+				"min": 4.56,
+				"max": 7.39,
+				"night": 7.34,
+				"eve": 7.2,
+				"morn": 4.56
+			},
+			"feels_like": {
+				"day": -0.53,
+				"night": 3.36,
+				"eve": 0.92,
+				"morn": -2.87
+			},
+			"pressure": 1028,
+			"humidity": 87,
+			"weather": [
+				{
+					"id": 502,
+					"main": "Rain",
+					"description": "heavy intensity rain",
+					"icon": "10d"
+				}
+			],
+			"speed": 7.66,
+			"deg": 109,
+			"clouds": 100,
+			"rain": 23.57
+		},
+		{
+			"dt": 1585069200,
+			"sunrise": 1585047113,
+			"sunset": 1585091534,
+			"temp": {
+				"day": 8.17,
+				"min": 6.93,
+				"max": 8.95,
+				"night": 7.97,
+				"eve": 8.79,
+				"morn": 6.93
+			},
+			"feels_like": {
+				"day": 6,
+				"night": 4,
+				"eve": 5.62,
+				"morn": 3.75
+			},
+			"pressure": 1022,
+			"humidity": 81,
+			"weather": [
+				{
+					"id": 804,
+					"main": "Clouds",
+					"description": "overcast clouds",
+					"icon": "04d"
+				}
+			],
+			"speed": 1.53,
+			"deg": 195,
+			"clouds": 100
+		}
+	]
+}
