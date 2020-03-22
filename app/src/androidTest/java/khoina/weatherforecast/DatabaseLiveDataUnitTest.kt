@@ -145,9 +145,13 @@ class DatabaseLiveDataUnitTest {
             "cloudy"
         )
         forecastDao.clearForecast("saigon")
-        val forecastLiveData = forecastDao.getForecastList("saigon")
-        val forecastList = forecastLiveData.getOrAwaitValue()
+        var forecastLiveData = forecastDao.getForecastList("saigon")
+        var forecastList = forecastLiveData.getOrAwaitValue()
         assertEquals(forecastList.size, 0)
+
+        forecastLiveData = forecastDao.getForecastList("new york")
+        forecastList = forecastLiveData.getOrAwaitValue()
+        assertEquals(forecastList.size, 1)
     }
 
     @Test
@@ -177,8 +181,73 @@ class DatabaseLiveDataUnitTest {
                 "light rain")
         )
         forecastDao.replaceAllForecast("saigon", replacingItems)
-        val liveData = forecastDao.getForecastList("new york")
-        val liveDataValue = liveData.getOrAwaitValue()
+        var liveData = forecastDao.getForecastList("new york")
+        var liveDataValue = liveData.getOrAwaitValue()
         assertEquals(liveDataValue.size, 1)
+
+        liveData = forecastDao.getForecastList("saigon")
+        liveDataValue = liveData.getOrAwaitValue()
+        assertEquals(liveDataValue.size, 0)
+    }
+
+    @Test
+    fun database_isCorrectReplacingWithExistingPlaceData() {
+        forecastDao.insertForecast(
+            "saigon",
+            1588179600L,
+            30f,
+            1001,
+            60,
+            "light rain"
+        )
+        forecastDao.insertForecast(
+            "new york",
+            1588266000,
+            20f,
+            1001,
+            30,
+            "cloudy"
+        )
+        val replacingItems = listOf(
+            ForecastRecord("new york",
+                1588179600L,
+                30f,
+                1001,
+                60,
+                "light rain")
+        )
+        forecastDao.replaceAllForecast("saigon", replacingItems)
+        var liveData = forecastDao.getForecastList("saigon")
+        var liveDataValue = liveData.getOrAwaitValue()
+        assertEquals(liveDataValue.size, 0)
+
+        liveData = forecastDao.getForecastList("new york")
+        liveDataValue = liveData.getOrAwaitValue()
+        assertEquals(liveDataValue.size, 2)
+    }
+
+    @Test
+    fun database_isCorrectReplacingWithEmptyData() {
+        forecastDao.insertForecast(
+            "saigon",
+            1588179600L,
+            30f,
+            1001,
+            60,
+            "light rain"
+        )
+        forecastDao.insertForecast(
+            "saigon",
+            1588266000,
+            20f,
+            1001,
+            30,
+            "cloudy"
+        )
+        val replacingItems = listOf<ForecastRecord>()
+        forecastDao.replaceAllForecast("saigon", replacingItems)
+        val liveData = forecastDao.getForecastList("saigon")
+        val liveDataValue = liveData.getOrAwaitValue()
+        assertEquals(liveDataValue.size, 0)
     }
 }
