@@ -30,5 +30,6 @@ interface AppComponent {
     fun okHttpClient(): OkHttpClient
     @VisibleForTesting
     fun gson(): Gson
+    @VisibleForTesting
     fun retrofitBuilder(): Retrofit.Builder
 }

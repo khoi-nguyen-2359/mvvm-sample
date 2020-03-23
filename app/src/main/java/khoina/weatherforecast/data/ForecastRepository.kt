@@ -7,6 +7,7 @@ import com.google.gson.Gson
 import khoina.weatherforecast.ForecastModel
 import khoina.weatherforecast.data.retrofit.ForecastApi
 import khoina.weatherforecast.data.room.ForecastDao
+import khoina.weatherforecast.manager.AppConfigManager
 import kotlinx.coroutines.Dispatchers
 import retrofit2.HttpException
 import javax.inject.Inject
@@ -16,12 +17,14 @@ import javax.inject.Singleton
 class ForecastRepository @Inject constructor(
     private val forecastApi: ForecastApi,
     private val forecastDao: ForecastDao,
-    private val gson: Gson
+    private val gson: Gson,
+    private val appConfigManager: AppConfigManager
 ) {
     private val entityMapper = ForecastEntityMapper()
 
     fun getForecastList(place: String, cnt: Int) = liveData<Resource<List<ForecastModel>>>(Dispatchers.IO) {
-        val hasFreshData = forecastDao.hasFreshData(place, cnt, System.currentTimeMillis() / 1000 - TIME_OUT_SEC)
+        val hasFreshData = appConfigManager.getCacheDuration() != 0L
+                && forecastDao.hasFreshData(place, cnt, System.currentTimeMillis() / 1000 - appConfigManager.getCacheDuration())
 
         if (hasFreshData) {
             Log.d("khoina", "cache hit")
@@ -61,9 +64,5 @@ class ForecastRepository @Inject constructor(
                 })
             }
         }
-    }
-
-    companion object {
-        const val TIME_OUT_SEC = 5
     }
 }

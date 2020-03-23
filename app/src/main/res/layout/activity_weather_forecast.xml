@@ -26,7 +26,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <ImageButton
+        android:id="@+id/btSettings"
+        android:layout_alignBottom="@+id/btGetWeather"
+        android:layout_alignTop="@+id/btGetWeather"
+        android:src="@drawable/ic_settings_applications_black_24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <Button
+        android:layout_toRightOf="@id/btSettings"
         android:layout_below="@id/pbLoading"
         android:id="@+id/btGetWeather"
         android:textAllCaps="false"

@@ -11,6 +11,7 @@ import khoina.weatherforecast.data.Resource
 import khoina.weatherforecast.data.entity.ErrorResponseEntity
 import khoina.weatherforecast.data.retrofit.ForecastApi
 import khoina.weatherforecast.data.room.ForecastDatabase
+import khoina.weatherforecast.manager.AppConfigManager
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
@@ -31,6 +32,8 @@ class ForecastListViewModelUnitTest {
     @Rule
     @JvmField
     val instantExecutorRule = InstantTaskExecutorRule()
+
+    private lateinit var appConfigManager: AppConfigManager
 
     private lateinit var database: ForecastDatabase
 
@@ -56,7 +59,8 @@ class ForecastListViewModelUnitTest {
             .build()
         val forecastDao = database.forecastDao()
 
-        val repository = ForecastRepository(mockForecastApi, forecastDao, gson)
+        appConfigManager = AppConfigManager()
+        val repository = ForecastRepository(mockForecastApi, forecastDao, gson, appConfigManager)
 
         viewModel = ForecastListViewModel(repository)
     }
@@ -132,6 +136,7 @@ class ForecastListViewModelUnitTest {
 
     @Test
     fun viewModel_isCorrectCachingWeatherForecast() {
+        appConfigManager.setCacheDuration(10)
         mockServer.enqueue(
             MockResponse()
                 .setResponseCode(200)
