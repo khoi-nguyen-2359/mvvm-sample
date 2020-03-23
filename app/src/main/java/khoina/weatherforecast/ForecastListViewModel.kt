@@ -27,6 +27,6 @@ class ForecastListViewModel @Inject constructor(
     }
 
     companion object {
-        const val ITEM_COUNT = 16
+        const val ITEM_COUNT = 7
     }
 }

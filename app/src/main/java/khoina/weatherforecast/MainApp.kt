@@ -12,9 +12,4 @@ class MainApp : Application() {
 		.build()
 
 	fun getAppComponent() = appComponent
-
-	@VisibleForTesting
-	fun setAppComponent(value: AppComponent) {
-		appComponent = value
-	}
 }

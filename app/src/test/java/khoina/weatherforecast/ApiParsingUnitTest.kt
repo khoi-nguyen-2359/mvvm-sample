@@ -64,10 +64,6 @@ class ApiParsingUnitTest {
         return String(file.readBytes())
     }
 
-    fun getServerErrorResponse(response: Response<*>?): ErrorResponseEntity {
-        return gson.fromJson(response?.errorBody()?.string(), ErrorResponseEntity::class.java)
-    }
-
     @Test
     fun apiParsing_isCorrectRequest() = runBlocking<Unit> {
         launch(Dispatchers.Main) {

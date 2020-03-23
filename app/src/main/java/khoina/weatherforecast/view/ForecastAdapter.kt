@@ -1,6 +1,8 @@
 package khoina.weatherforecast.view
 
 import android.view.ViewGroup
+import androidx.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting.PROTECTED
 import androidx.recyclerview.widget.RecyclerView
 import khoina.weatherforecast.ForecastModel
 import java.text.SimpleDateFormat
@@ -28,4 +30,7 @@ class ForecastAdapter: RecyclerView.Adapter<ForecastViewHolder>() {
         items.addAll(testData)
         notifyDataSetChanged()
     }
+
+    @VisibleForTesting
+    fun getItem(itemPos: Int) = items[itemPos]
 }

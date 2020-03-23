@@ -4,4 +4,7 @@
     <color name="colorPrimaryDark">#004d42</color>
     <color name="colorAccent">#b1537d</color>
     <color name="error_text">#f00</color>
+    <color name="listing_background">#fff</color>
+    <color name="place_query_text">#000</color>
+    <color name="forecast_item_text">#000</color>
 </resources>

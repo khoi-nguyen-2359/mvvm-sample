@@ -4,9 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/listing_background"
+    >
 
     <EditText
+        android:textColor="@color/place_query_text"
         android:imeOptions="actionSearch"
         android:singleLine="true"
         android:lines="1"

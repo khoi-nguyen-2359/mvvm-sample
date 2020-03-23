@@ -32,13 +32,6 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-
-    testOptions {
-        animationsDisabled = true
-        unitTests {
-            includeAndroidResources = true
-        }
-    }
 }
 
 androidExtensions {
@@ -55,8 +48,10 @@ dependencies {
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.2.0'
     androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
     androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation 'com.jakewharton.espresso:okhttp3-idling-resource:1.0.0'
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.2.0'
