@@ -57,7 +57,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun providesOkHttpClient(gson: Gson): OkHttpClient {
+    fun providesOkHttpClient(): OkHttpClient {
         val okHttpClientBuilder = OkHttpClient.Builder()
         val logger = HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
             override fun log(message: String) {
@@ -71,13 +71,17 @@ class AppModule {
     }
 
     @Provides
-    @Singleton
-    fun providesAppRetrofit(gson: Gson, okHttpClient: OkHttpClient): Retrofit {
+    fun providesAppRetrofitBuilder(gson: Gson, okHttpClient: OkHttpClient): Retrofit.Builder {
         return Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(okHttpClient)
             .baseUrl(API_ENDPOINT)
-            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun providesAppRetrofit(retrofitBuilder: Retrofit.Builder): Retrofit {
+        return retrofitBuilder.build()
     }
 
     @Provides

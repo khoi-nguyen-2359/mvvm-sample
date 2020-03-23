@@ -1,11 +1,12 @@
 package khoina.weatherforecast
 
-import com.google.gson.FieldNamingPolicy
+import android.content.Context
+import android.util.Log
+import androidx.test.InstrumentationRegistry
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import khoina.weatherforecast.data.ParsedHttpException
 import khoina.weatherforecast.data.entity.DayTempEntity
-import khoina.weatherforecast.data.entity.ErrorResponseEntity
 import khoina.weatherforecast.data.entity.ForecastEntity
 import khoina.weatherforecast.data.entity.WeatherEntity
 import khoina.weatherforecast.data.parseHttpException
@@ -19,19 +20,20 @@ import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 import retrofit2.HttpException
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.io.File
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
 
 @ExperimentalCoroutinesApi
+@RunWith(AndroidJUnit4::class)
 class ApiParsingUnitTest {
     lateinit var forecastApi: ForecastApi
     lateinit var mockServer: MockWebServer
     lateinit var gson: Gson
 
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
+    val application = ApplicationProvider.getApplicationContext<MainApp>()
 
     @Before
     fun setupTest() {
@@ -40,11 +42,9 @@ class ApiParsingUnitTest {
         mockServer = MockWebServer()
         mockServer.start()
 
-        gson = GsonBuilder()
-            .setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
-            .create()
-        val retrofit = Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create(gson))
+        gson = application.getAppComponent().gson()
+
+        val retrofit = application.getAppComponent().retrofitBuilder()
             .baseUrl(mockServer.url("/").toString())
             .build()
 
@@ -58,10 +58,22 @@ class ApiParsingUnitTest {
         mainThreadSurrogate.close()
     }
 
+    private fun readTextStream(inputStream: InputStream): String {
+        val result = ByteArrayOutputStream()
+        val buffer = ByteArray(1024)
+        var length: Int
+        while (inputStream.read(buffer).also { length = it } != -1) {
+            result.write(buffer, 0, length)
+        }
+        return result.toString("UTF-8")
+    }
+
     private fun readResponseFromFile(path: String): String {
-        val uri = this.javaClass.classLoader?.getResource(path)
-        val file = File(uri?.path)
-        return String(file.readBytes())
+        val ctx: Context = InstrumentationRegistry.getContext()
+        val `is`: InputStream = ctx.getResources().getAssets().open(path)
+        val s: String = readTextStream(`is`)
+        `is`.close()
+        return s
     }
 
     @Test
