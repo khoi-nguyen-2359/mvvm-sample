@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.LargeTest
 import khoina.weatherforecast.data.room.ForecastDao
 import khoina.weatherforecast.data.room.ForecastDatabase
 import org.junit.*
@@ -12,6 +13,7 @@ import org.junit.runner.RunWith
 import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
+@LargeTest
 class DatabaseUnitTest {
     private lateinit var database: ForecastDatabase
     private lateinit var forecastDao: ForecastDao

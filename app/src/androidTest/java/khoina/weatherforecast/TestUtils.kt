@@ -1,33 +1,15 @@
 package khoina.weatherforecast
 
-/*
- * Copyright (C) 2019 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import androidx.test.InstrumentationRegistry
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
-/**
- * Gets the value of a [LiveData] or waits for it to have one, with a timeout.
- *
- * Use this extension from host-side (JVM) tests. It's recommended to use it alongside
- * `InstantTaskExecutorRule` or a similar mechanism to execute tasks synchronously.
- */
 fun <T> LiveData<T>.getOrAwaitValue(
     time: Long = 2,
     timeUnit: TimeUnit = TimeUnit.SECONDS,
@@ -46,7 +28,6 @@ fun <T> LiveData<T>.getOrAwaitValue(
 
     afterObserve.invoke()
 
-    // Don't wait indefinitely if the LiveData is not set.
     if (!latch.await(time, timeUnit)) {
         this.removeObserver(observer)
         throw TimeoutException("LiveData value was never set.")
@@ -56,9 +37,6 @@ fun <T> LiveData<T>.getOrAwaitValue(
     return data as T
 }
 
-/**
- * Observes a [LiveData] until the `block` is done executing.
- */
 fun <T> LiveData<T>.observeForTesting(block: () -> Unit) {
     val observer = Observer<T> { }
     try {
@@ -67,4 +45,22 @@ fun <T> LiveData<T>.observeForTesting(block: () -> Unit) {
     } finally {
         removeObserver(observer)
     }
+}
+
+fun readTextStream(inputStream: InputStream): String {
+    val result = ByteArrayOutputStream()
+    val buffer = ByteArray(1024)
+    var length: Int
+    while (inputStream.read(buffer).also { length = it } != -1) {
+        result.write(buffer, 0, length)
+    }
+    return result.toString("UTF-8")
+}
+
+fun readResponseFromFile(path: String): String {
+    val ctx: Context = InstrumentationRegistry.getContext()
+    val `is`: InputStream = ctx.getResources().getAssets().open(path)
+    val s: String = readTextStream(`is`)
+    `is`.close()
+    return s
 }

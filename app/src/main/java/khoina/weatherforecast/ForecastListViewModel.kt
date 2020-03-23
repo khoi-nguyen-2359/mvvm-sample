@@ -1,5 +1,6 @@
 package khoina.weatherforecast
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
@@ -21,6 +22,7 @@ class ForecastListViewModel @Inject constructor(
         forecastDataSource = repository.getForecastList(place, ITEM_COUNT)
             .also { liveDataSource ->
                 liveForecastData.addSource(liveDataSource) { result ->
+                    Log.d("khoi", "incoming data ${result.data?.size}")
                     liveForecastData.value = result
                 }
             }
