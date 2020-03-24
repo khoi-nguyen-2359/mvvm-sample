@@ -38,16 +38,16 @@ class ForecastRepository @Inject constructor(
             Log.d("khoina", "cache miss")
 
             try {
-                emitSource(
+                val disposable = emitSource(
                     forecastDao.getForecastList(place).map {
                         Resource.Loading(it.map(
                             entityMapper::mapModel
                         ))
                     }
                 )
-
                 val response = forecastApi.getDailyForecast(place, cnt)
                 val records = response.list.map { entityMapper.mapRecord(place, it) }
+                disposable.dispose()
                 forecastDao.replaceAllForecast(place, records)
                 Log.d("khoina", "cache records = ${records.size}")
 
