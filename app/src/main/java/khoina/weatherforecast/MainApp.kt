@@ -1,7 +1,6 @@
 package khoina.weatherforecast
 
 import android.app.Application
-import androidx.annotation.VisibleForTesting
 import khoina.weatherforecast.dagger.AppComponent
 import khoina.weatherforecast.dagger.DaggerAppComponent
 

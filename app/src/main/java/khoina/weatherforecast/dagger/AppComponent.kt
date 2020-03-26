@@ -1,6 +1,5 @@
 package khoina.weatherforecast.dagger
 
-import androidx.annotation.VisibleForTesting
 import com.google.gson.Gson
 import khoina.weatherforecast.MainApp
 import dagger.BindsInstance
@@ -26,10 +25,7 @@ interface AppComponent {
         fun mainApp(application: MainApp): Builder
     }
 
-    @VisibleForTesting
     fun okHttpClient(): OkHttpClient
-    @VisibleForTesting
     fun gson(): Gson
-    @VisibleForTesting
     fun retrofitBuilder(): Retrofit.Builder
 }

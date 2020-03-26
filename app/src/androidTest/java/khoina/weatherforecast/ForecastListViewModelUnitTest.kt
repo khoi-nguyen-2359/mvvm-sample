@@ -5,7 +5,7 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import khoina.weatherforecast.data.ForecastRepository
+import khoina.weatherforecast.data.repo.ForecastRepositoryImpl
 import khoina.weatherforecast.data.ParsedHttpException
 import khoina.weatherforecast.data.Resource
 import khoina.weatherforecast.data.entity.ErrorResponseEntity
@@ -60,7 +60,12 @@ class ForecastListViewModelUnitTest {
         val forecastDao = database.forecastDao()
 
         appConfigManager = AppConfigManager()
-        val repository = ForecastRepository(mockForecastApi, forecastDao, gson, appConfigManager)
+        val repository = ForecastRepositoryImpl(
+            mockForecastApi,
+            forecastDao,
+            gson,
+            appConfigManager
+        )
 
         viewModel = ForecastListViewModel(repository)
     }

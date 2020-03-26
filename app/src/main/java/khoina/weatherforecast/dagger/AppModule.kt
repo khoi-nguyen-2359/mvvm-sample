@@ -13,6 +13,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
 import khoina.weatherforecast.ForecastListViewModel
+import khoina.weatherforecast.data.repo.ForecastRepository
+import khoina.weatherforecast.data.repo.ForecastRepositoryImpl
 import khoina.weatherforecast.data.retrofit.ForecastApi
 import khoina.weatherforecast.data.room.ForecastDao
 import khoina.weatherforecast.data.room.ForecastDatabase
@@ -34,6 +36,10 @@ class AppModule {
         @IntoMap
         @ViewModelKey(ForecastListViewModel::class)
         fun forecastListViewModel(forecastListViewModel: ForecastListViewModel): ViewModel
+
+        @Binds
+        @Singleton
+        fun forecastRepo(repositoryImpl: ForecastRepositoryImpl): ForecastRepository
     }
 
     @Provides

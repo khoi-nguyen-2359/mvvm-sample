@@ -19,6 +19,7 @@ class ForecastEntityMapper {
 
     fun mapModel(record: ForecastRecord): ForecastModel {
         return ForecastModel(
+            record.place,
             Date(record.date * 1000),
             record.aveTemp,
             record.pressure,
