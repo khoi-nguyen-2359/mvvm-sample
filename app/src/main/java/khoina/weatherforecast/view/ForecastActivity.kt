@@ -14,7 +14,6 @@ import khoina.weatherforecast.ForecastModel
 import khoina.weatherforecast.data.Resource
 import khoina.weatherforecast.manager.AppConfigManager
 import kotlinx.android.synthetic.main.activity_weather_forecast.*
-import java.util.Map
 import javax.inject.Inject
 
 class ForecastActivity: AppCompatActivity(R.layout.activity_weather_forecast) {
@@ -48,6 +47,8 @@ class ForecastActivity: AppCompatActivity(R.layout.activity_weather_forecast) {
 
     private fun setupObservers() {
         forecastListViewModel.getLiveForecastData().observe(this, forecastListObserver)
+        forecastListViewModel.getError().observe(this, errorObserver)
+        forecastListViewModel.isLoading().observe(this, loadingObserver)
     }
 
     private fun setupViews() {
@@ -90,21 +91,20 @@ class ForecastActivity: AppCompatActivity(R.layout.activity_weather_forecast) {
         forecastListViewModel.getForecastList(place)
     }
 
-    private val forecastListObserver = Observer<Resource<List<ForecastModel>>> { resource ->
-        Log.d("khoina", "resource count = ${resource.data?.size}")
+    private val errorObserver = Observer<Exception> {
+        tvError.text = it?.message ?: ""
+    }
 
-        if (resource is Resource.Loading)
-            pbLoading.visibility = View.VISIBLE
+    private val loadingObserver = Observer<Boolean> {
+        pbLoading.visibility = if (it == true)
+            View.VISIBLE
         else
-            pbLoading.visibility = View.INVISIBLE
+            View.INVISIBLE
+    }
 
-        if (resource is Resource.Error) {
-            tvError.text = resource.exception.message
-        } else {
-            tvError.text = ""
-        }
-
-        resource.data ?. let {
+    private val forecastListObserver = Observer<List<ForecastModel>> { data ->
+        Log.d("khoina", "resource count = ${data?.size}")
+        data ?. let {
             forecastAdapter.submitData(it)
         }
     }

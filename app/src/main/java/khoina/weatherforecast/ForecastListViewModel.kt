@@ -3,6 +3,7 @@ package khoina.weatherforecast
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import khoina.weatherforecast.data.repo.ForecastRepositoryImpl
 import khoina.weatherforecast.data.Resource
@@ -14,8 +15,14 @@ class ForecastListViewModel @Inject constructor(
 ): ViewModel() {
 
     private var forecastDataSource: LiveData<Resource<List<ForecastModel>>>? = null
-    private val liveForecastData = MediatorLiveData<Resource<List<ForecastModel>>>()
-    fun getLiveForecastData() = liveForecastData as LiveData<Resource<List<ForecastModel>>>
+    private val liveForecastData = MediatorLiveData<List<ForecastModel>>()
+    fun getLiveForecastData() = liveForecastData as LiveData<List<ForecastModel>>
+
+    private val error = MutableLiveData<Exception>()
+    fun getError(): LiveData<Exception> = error
+
+    private val isLoading = MutableLiveData<Boolean>()
+    fun isLoading(): LiveData<Boolean> = isLoading
 
     fun getForecastList(place: String) {
         forecastDataSource ?. let { liveForecastData.removeSource(it) }
@@ -23,7 +30,15 @@ class ForecastListViewModel @Inject constructor(
             .also { liveDataSource ->
                 liveForecastData.addSource(liveDataSource) { result ->
                     Log.d("khoi", "incoming data ${result.data?.size}")
-                    liveForecastData.value = result
+                    liveForecastData.value = result.data
+
+                    if (result is Resource.Error) {
+                        error.value = result.exception
+                    } else {
+                        error.value = null
+                    }
+
+                    isLoading.value = result is Resource.Loading
                 }
             }
     }
