@@ -9,12 +9,14 @@
     >
 
     <EditText
+        android:hint="@string/hint_place_name"
         android:textColor="@color/place_query_text"
         android:imeOptions="actionSearch"
         android:singleLine="true"
         android:lines="1"
         android:id="@+id/etPlace"
         android:layout_width="match_parent"
+        android:minHeight="48dp"
         android:layout_height="wrap_content" />
 
     <ProgressBar
@@ -27,6 +29,7 @@
         android:layout_height="wrap_content" />
 
     <ImageButton
+        android:contentDescription="@string/con_des_cache_settings"
         android:id="@+id/btSettings"
         android:layout_alignBottom="@+id/btGetWeather"
         android:layout_alignTop="@+id/btGetWeather"
@@ -58,6 +61,7 @@
         android:layout_height="wrap_content" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:contentDescription="@string/con_des_forecast_list"
         android:layout_below="@id/btGetWeather"
         android:id="@+id/rcvWeatherForecast"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

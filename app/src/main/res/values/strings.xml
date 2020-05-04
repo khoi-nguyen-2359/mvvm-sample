@@ -7,4 +7,7 @@
     <string name="label_humidity">Humidity</string>
     <string name="label_description">Description</string>
     <string name="alert_cache_settings_title">Please select a cache duration</string>
+    <string name="hint_place_name">Place name</string>
+    <string name="con_des_cache_settings">Cache settings</string>
+    <string name="con_des_forecast_list">Forecast data of a city</string>
 </resources>

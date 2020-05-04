@@ -99,14 +99,10 @@ class ForecastListViewModelUnitTest {
 
         val liveForecastData = viewModel.getLiveForecastData()
         viewModel.getForecastList("saigon")
-        val data1 = liveForecastData.getOrAwaitValue()
-        assertTrue(data1 is Resource.Loading)
-
+        liveForecastData.getOrAwaitValue()
         Thread.sleep(2000)
-
-        val data2 = liveForecastData.getOrAwaitValue()
-        assertTrue(data2 is Resource.Success)
-        assertEquals(data2.data?.size, 7)
+        val data = liveForecastData.getOrAwaitValue()
+        assertEquals(data.size, 7)
     }
 
     @Test
@@ -120,21 +116,18 @@ class ForecastListViewModelUnitTest {
 
         val liveForecastData = viewModel.getLiveForecastData()
         viewModel.getForecastList("saigon")
-        val data1 = liveForecastData.getOrAwaitValue()
-        assertTrue(data1 is Resource.Loading)
-
+        liveForecastData.getOrAwaitValue()
         Thread.sleep(2000)
 
-        val data2 = liveForecastData.getOrAwaitValue()
-        assertTrue(data2 is Resource.Success)
-        assertEquals(data2.data?.size, 3)
+        val data = liveForecastData.getOrAwaitValue()
+        assertEquals(data.size, 3)
 
         val mockedItems = listOf(
-            ForecastModel(Date(1584896400000), 4.95f, 1038, 63, "overcast clouds"),
-            ForecastModel(Date(1584982800000), 6.13f, 1028, 87, "heavy intensity rain"),
-            ForecastModel(Date(1585069200000), 8.17f, 1022, 81, "overcast clouds")
+            ForecastModel("saigon", Date(1584896400000), 4.95f, 1038, 63, "overcast clouds"),
+            ForecastModel("saigon", Date(1584982800000), 6.13f, 1028, 87, "heavy intensity rain"),
+            ForecastModel("saigon", Date(1585069200000), 8.17f, 1022, 81, "overcast clouds")
         )
-        data2.data?.forEachIndexed { index, item ->
+        data.forEachIndexed { index, item ->
             assertEquals(item, mockedItems[index])
         }
     }
@@ -169,12 +162,8 @@ class ForecastListViewModelUnitTest {
         Thread.sleep(1000)
         val data3 = liveForecastData.getOrAwaitValue()
 
-        assertTrue(data1 is Resource.Success)
-        assertTrue(data2 is Resource.Success)
-        assertTrue(data3 is Resource.Success)
-
-        data1.data?.forEachIndexed { index, item ->
-            assertTrue(item == data3.data!![index])
+        data1.forEachIndexed { index, item ->
+            assertTrue(item == data3.get(index))
         }
     }
 
@@ -189,16 +178,15 @@ class ForecastListViewModelUnitTest {
 
         val liveForecastData = viewModel.getLiveForecastData()
         viewModel.getForecastList("saigon2")
-        val data1 = liveForecastData.getOrAwaitValue()
-        assertTrue(data1 is Resource.Loading)
-
+        liveForecastData.getOrAwaitValue()  // loading data
         Thread.sleep(2000)
 
-        val data2 = liveForecastData.getOrAwaitValue()
-        assertTrue(data2 is Resource.Error)
-        assertTrue(data2.data == null)
-        assertTrue((data2 as Resource.Error).exception is ParsedHttpException)
-        assertTrue((data2.exception as ParsedHttpException).errorResponse == ErrorResponseEntity("404", "city not found"))
-    }
+        val data = liveForecastData.getOrAwaitValue()
+        assertTrue(data.isEmpty())
 
+        val liveError = viewModel.getError()
+        val exception = liveError.getOrAwaitValue()
+        assertTrue(exception is ParsedHttpException)
+        assertTrue((exception as ParsedHttpException).errorResponse == ErrorResponseEntity("404", "city not found"))
+    }
 }

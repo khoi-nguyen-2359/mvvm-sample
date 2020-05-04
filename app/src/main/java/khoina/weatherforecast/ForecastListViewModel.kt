@@ -30,7 +30,7 @@ class ForecastListViewModel @Inject constructor(
             .also { liveDataSource ->
                 liveForecastData.addSource(liveDataSource) { result ->
                     Log.d("khoi", "incoming data ${result.data?.size}")
-                    liveForecastData.value = result.data
+                    liveForecastData.value = result.data ?: emptyList()
 
                     if (result is Resource.Error) {
                         error.value = result.exception

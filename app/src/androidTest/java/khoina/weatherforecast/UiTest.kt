@@ -7,18 +7,22 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.accessibility.AccessibilityChecks
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
+import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesCheckNames
+import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesViews
 import com.jakewharton.espresso.OkHttp3IdlingResource
 import khoina.weatherforecast.view.ForecastActivity
 import khoina.weatherforecast.view.ForecastAdapter
 import okhttp3.OkHttpClient
+import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.Matchers.`is`
 import org.junit.*
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -175,5 +179,18 @@ class UiTest {
 
     companion object {
         const val API_ITEM_COUNT = 7
+
+        @BeforeClass @JvmStatic
+        fun setupClass() {
+            AccessibilityChecks.enable()
+//                .apply {
+//                setSuppressingResultMatcher(
+//                    allOf(
+//                        matchesCheckNames(`is`("SpeakableTextPresentViewCheck")),
+//                        matchesViews(withId(R.id.etPlace))
+//                    )
+//                )
+//            }
+        }
     }
 }

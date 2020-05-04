@@ -104,9 +104,7 @@ class ForecastActivity: AppCompatActivity(R.layout.activity_weather_forecast) {
 
     private val forecastListObserver = Observer<List<ForecastModel>> { data ->
         Log.d("khoina", "resource count = ${data?.size}")
-        data ?. let {
-            forecastAdapter.submitData(it)
-        }
+        forecastAdapter.submitData(data)
     }
 
 }
