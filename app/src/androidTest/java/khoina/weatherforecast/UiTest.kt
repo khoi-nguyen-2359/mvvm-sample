@@ -183,14 +183,14 @@ class UiTest {
         @BeforeClass @JvmStatic
         fun setupClass() {
             AccessibilityChecks.enable()
-//                .apply {
-//                setSuppressingResultMatcher(
-//                    allOf(
-//                        matchesCheckNames(`is`("SpeakableTextPresentViewCheck")),
-//                        matchesViews(withId(R.id.etPlace))
-//                    )
-//                )
-//            }
+                .apply {
+                setSuppressingResultMatcher(
+                    allOf(
+                        matchesCheckNames(`is`("SpeakableTextPresentViewCheck")),
+                        matchesViews(withId(R.id.etPlace))
+                    )
+                )
+            }
         }
     }
 }
