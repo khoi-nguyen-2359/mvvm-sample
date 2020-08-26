@@ -7,11 +7,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import khoina.weatherforecast.data.repo.ForecastRepositoryImpl
 import khoina.weatherforecast.data.Resource
+import khoina.weatherforecast.data.repo.ForecastRepository
 import javax.inject.Inject
 
 
 class ForecastListViewModel @Inject constructor(
-    private val repository: ForecastRepositoryImpl
+    private val repository: ForecastRepository
 ): ViewModel() {
 
     private var forecastDataSource: LiveData<Resource<List<ForecastModel>>>? = null
